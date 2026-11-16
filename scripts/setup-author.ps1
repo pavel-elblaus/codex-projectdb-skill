@@ -14,23 +14,23 @@ if (-not (Test-Path -LiteralPath (Join-Path $skillTarget 'SKILL.md'))) { throw '
 
 function Invoke-RepoGit {
     param([string[]]$GitArgs)
-    & git -C $repoRoot @GitArgs
+    & git -c "safe.directory=$repoRoot" -C $repoRoot @GitArgs
     if ($LASTEXITCODE -ne 0) { throw "Git failed: $($GitArgs -join ' ')" }
 }
 
 if (-not (Test-Path -LiteralPath (Join-Path $repoRoot '.git'))) { Invoke-RepoGit -GitArgs @('init', '--initial-branch=main') }
-if ((& git -C $repoRoot symbolic-ref --short HEAD) -ne 'main') { throw 'Switch to the main branch before setup.' }
+if ((Invoke-RepoGit -GitArgs @('symbolic-ref', '--short', 'HEAD')) -ne 'main') { throw 'Switch to the main branch before setup.' }
 $manifest = Get-Content -LiteralPath (Join-Path $repoRoot 'plugins\projectdb\plugin.json') -Raw | ConvertFrom-Json
-$remote = & git -C $repoRoot remote get-url origin 2>$null
+$remote = & git -c "safe.directory=$repoRoot" -C $repoRoot config --get remote.origin.url
 if ($LASTEXITCODE -ne 0) { Invoke-RepoGit -GitArgs @('remote', 'add', 'origin', ($manifest.repository + '.git')) }
 elseif ($remote.TrimEnd('/').Replace('.git', '') -ne $manifest.repository) { throw 'Unexpected origin; inspect it before setup.' }
 Invoke-RepoGit -GitArgs @('fetch', 'origin', 'main')
-& git -C $repoRoot rev-parse --verify HEAD 2>$null | Out-Null
+& git -c "safe.directory=$repoRoot" -C $repoRoot rev-parse --verify --quiet HEAD | Out-Null
 if ($LASTEXITCODE -ne 0) { Invoke-RepoGit -GitArgs @('reset', '--mixed', 'origin/main') }
 else { Invoke-RepoGit -GitArgs @('pull', '--ff-only', 'origin', 'main') }
 Invoke-RepoGit -GitArgs @('branch', '--set-upstream-to=origin/main', 'main')
-$pending = & git -C $repoRoot status --porcelain --untracked-files=all
-if ($LASTEXITCODE -ne 0 -or $pending) { throw 'Review local changes before linking the installed skill.' }
+$pending = Invoke-RepoGit -GitArgs @('status', '--porcelain', '--untracked-files=all')
+if ($pending) { throw 'Review local changes before linking the installed skill.' }
 & node (Join-Path $repoRoot 'scripts\validate.mjs')
 if ($LASTEXITCODE -ne 0) { throw 'Plugin validation failed.' }
 

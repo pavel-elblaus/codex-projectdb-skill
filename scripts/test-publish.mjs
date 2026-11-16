@@ -10,7 +10,10 @@ const temporary = await mkdtemp(path.join(tmpdir(), 'projectdb-publish-test-'));
 const fixture = path.join(temporary, 'repo');
 const remote = path.join(temporary, 'remote.git').split(path.sep).join('/');
 const git = (args) => execFileSync('git', args, { cwd: fixture, encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
-const publish = (...args) => spawnSync(process.execPath, ['scripts/publish.mjs', ...args], { cwd: fixture, encoding: 'utf8' });
+const publish = (...args) => spawnSync(process.execPath, ['scripts/publish.mjs', ...args], {
+	cwd: fixture, encoding: 'utf8',
+	env: { ...process.env, GIT_TEST_ASSUME_DIFFERENT_OWNER: '1', GIT_CONFIG_COUNT: '1', GIT_CONFIG_KEY_0: 'safe.directory', GIT_CONFIG_VALUE_0: remote },
+});
 const success = (result) => assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
 
 try {

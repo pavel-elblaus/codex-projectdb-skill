@@ -6,9 +6,9 @@ import { parseArgs } from 'node:util';
 import { tmpdir } from 'node:os';
 import { createHash } from 'node:crypto';
 
-const root = fileURLToPath(new URL('../', import.meta.url));
+const root = path.resolve(fileURLToPath(new URL('../', import.meta.url)));
 const manifestPath = 'plugins/projectdb/plugin.json';
-const git = (args) => execFileSync('git', args, {
+const git = (args) => execFileSync('git', ['-c', `safe.directory=${root}`, ...args], {
 	cwd: root, encoding: 'utf8', timeout: 30000,
 	env: { ...process.env, GIT_TERMINAL_PROMPT: '0', GCM_INTERACTIVE: 'never' },
 });
