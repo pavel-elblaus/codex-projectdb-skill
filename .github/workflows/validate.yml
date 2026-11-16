@@ -23,5 +23,5 @@ jobs:
       - name: Verify automatic publication against a local Git remote
         run: node scripts/test-publish.mjs
       - name: Verify Windows author setup with a different repository owner
-        if: runner.os == 'Windows'
+        if: ${{ !cancelled() && runner.os == 'Windows' }}
         run: node scripts/test-setup.mjs

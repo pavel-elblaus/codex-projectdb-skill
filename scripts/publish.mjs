@@ -1,4 +1,4 @@
-import { readFile, writeFile, open, unlink } from 'node:fs/promises';
+import { readFile, writeFile, open, unlink, realpath } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -17,7 +17,11 @@ let lock;
 const lockPath = path.join(tmpdir(), `projectdb-publish-${createHash('sha256').update(root).digest('hex').slice(0, 20)}.lock`);
 
 try {
-	if (path.resolve(git(['rev-parse', '--show-toplevel']).trim()) !== path.resolve(root)) throw new Error('Run setup-author.ps1 to initialize this repository.');
+	const canonical = async (directory) => {
+		const resolved = await realpath(directory);
+		return process.platform === 'win32' ? resolved.toLowerCase() : resolved;
+	};
+	if (await canonical(git(['rev-parse', '--show-toplevel']).trim()) !== await canonical(root)) throw new Error('This script must belong to the current Git checkout. Run setup-author.ps1 if the checkout is not initialized.');
 	if (git(['branch', '--show-current']).trim() !== 'main') throw new Error('Publication requires the main branch.');
 	if (values.auto && git(['config', '--get', 'projectdb.autoPublish']).trim() !== 'true') throw new Error('Automatic publication is not enabled by this repository owner.');
 	if (git(['diff', '--cached', '--name-only']).trim()) throw new Error('The index already contains staged changes; review them before publishing.');
