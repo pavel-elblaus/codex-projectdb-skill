@@ -1,0 +1,20 @@
+{
+	"name": "pavel-projectdb-skills",
+	"interface": {
+		"displayName": "ProjectDB for Codex"
+	},
+	"plugins": [
+		{
+			"name": "projectdb",
+			"source": {
+				"source": "local",
+				"path": "./plugins/projectdb"
+			},
+			"policy": {
+				"installation": "AVAILABLE",
+				"authentication": "ON_INSTALL"
+			},
+			"category": "Productivity"
+		}
+	]
+}

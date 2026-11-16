@@ -1,0 +1,28 @@
+{
+	"$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+	"name": "projectdb",
+	"version": "1.0.0",
+	"description": "Навык для разработки и проверки Twig, JSON, CSS, JavaScript и ручной сборки ProjectDB в Codex.",
+	"author": {
+		"name": "pavel-elblaus",
+		"url": "https://github.com/pavel-elblaus"
+	},
+	"homepage": "https://github.com/pavel-elblaus/codex-projectdb-skill",
+	"repository": "https://github.com/pavel-elblaus/codex-projectdb-skill",
+	"keywords": ["codex", "projectdb", "twig", "skills"],
+	"extensions": {
+		"com.openai": {
+			"interface": {
+				"displayName": "ProjectDB for Codex",
+				"shortDescription": "Шаблоны, модули и ручная сборка ProjectDB",
+				"longDescription": "Правила разработки и проверки ProjectDB: Twig, конфигурации JSON, CSS, модульный JavaScript, наследование ресурсов и карта project-map.json. Включает навык projectdb-constructor, справочные материалы и примеры контрактов.",
+				"developerName": "pavel-elblaus",
+				"category": "Productivity",
+				"websiteURL": "https://github.com/pavel-elblaus/codex-projectdb-skill",
+				"defaultPrompt": [
+					"Используй навык projectdb-constructor для доработки моего проекта ProjectDB с сохранением базовых контрактов."
+				]
+			}
+		}
+	}
+}

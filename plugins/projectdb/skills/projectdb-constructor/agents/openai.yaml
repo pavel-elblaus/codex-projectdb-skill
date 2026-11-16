@@ -1,0 +1,4 @@
+interface:
+  display_name: "Конструктор ProjectDB"
+  short_description: "Twig, модули и правила ручной сборки ProjectDB"
+  default_prompt: "Используй $projectdb-constructor для доработки модулей ProjectDB с сохранением базовых контрактов."
