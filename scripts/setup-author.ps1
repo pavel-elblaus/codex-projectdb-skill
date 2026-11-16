@@ -5,6 +5,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $repoRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+$gitSafeDirectory = $repoRoot.Replace('\', '/')
 $skillTarget = [System.IO.Path]::GetFullPath((Join-Path $repoRoot 'plugins\projectdb\skills\projectdb-constructor'))
 $skillHomePath = [System.IO.Path]::GetFullPath($SkillHome)
 $skillLink = [System.IO.Path]::GetFullPath((Join-Path $skillHomePath 'projectdb-constructor'))
@@ -14,18 +15,18 @@ if (-not (Test-Path -LiteralPath (Join-Path $skillTarget 'SKILL.md'))) { throw '
 
 function Invoke-RepoGit {
     param([string[]]$GitArgs)
-    & git -c "safe.directory=$repoRoot" -C $repoRoot @GitArgs
+    & git -c "safe.directory=$gitSafeDirectory" -C $repoRoot @GitArgs
     if ($LASTEXITCODE -ne 0) { throw "Git failed: $($GitArgs -join ' ')" }
 }
 
 if (-not (Test-Path -LiteralPath (Join-Path $repoRoot '.git'))) { Invoke-RepoGit -GitArgs @('init', '--initial-branch=main') }
 if ((Invoke-RepoGit -GitArgs @('symbolic-ref', '--short', 'HEAD')) -ne 'main') { throw 'Switch to the main branch before setup.' }
 $manifest = Get-Content -LiteralPath (Join-Path $repoRoot 'plugins\projectdb\plugin.json') -Raw | ConvertFrom-Json
-$remote = & git -c "safe.directory=$repoRoot" -C $repoRoot config --get remote.origin.url
+$remote = & git -c "safe.directory=$gitSafeDirectory" -C $repoRoot config --get remote.origin.url
 if ($LASTEXITCODE -ne 0) { Invoke-RepoGit -GitArgs @('remote', 'add', 'origin', ($manifest.repository + '.git')) }
 elseif ($remote.TrimEnd('/').Replace('.git', '') -ne $manifest.repository) { throw 'Unexpected origin; inspect it before setup.' }
 Invoke-RepoGit -GitArgs @('fetch', 'origin', 'main')
-& git -c "safe.directory=$repoRoot" -C $repoRoot rev-parse --verify --quiet HEAD | Out-Null
+& git -c "safe.directory=$gitSafeDirectory" -C $repoRoot rev-parse --verify --quiet HEAD | Out-Null
 if ($LASTEXITCODE -ne 0) { Invoke-RepoGit -GitArgs @('reset', '--mixed', 'origin/main') }
 else { Invoke-RepoGit -GitArgs @('pull', '--ff-only', 'origin', 'main') }
 Invoke-RepoGit -GitArgs @('branch', '--set-upstream-to=origin/main', 'main')
