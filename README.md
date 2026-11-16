@@ -1,105 +1,67 @@
 # ProjectDB skill for Codex
 
-Русскоязычный навык `projectdb-constructor`, упакованный в плагин `projectdb` для Codex. Помогает разрабатывать и проверять Twig-шаблоны, JSON-конфигурации, CSS, модульный JavaScript и ручную сборку ProjectDB с сохранением системных контрактов.
+Описание и руководство также доступны [на русском языке](README.ru.md).
 
-Пакет включает правила, справочник готовых компонентов и небольшие примеры контрактов. Для работы нужны исходники и базовые компоненты вашего проекта ProjectDB. Пути, версии библиотек, данные и настройки определяются текущим проектом.
+**ProjectDB skill for Codex** helps you develop and review ProjectDB templates and modules while preserving the platform's existing contracts. It covers Twig templates, JSON configuration, CSS, modular JavaScript, resource inheritance and manual assembly with `project-map.json`.
 
-## Установка
+The plugin includes the `projectdb-constructor` skill, reference material and small contract examples. The skill's instructions are written in Russian.
 
-Навык подходит для личных проектов и работы в команде. Выберите один способ установки: плагин из каталога, самостоятельный навык или плагин рабочего пространства.
+## What you need
 
-### Для личного использования: плагин
+Use the skill in Codex with access to your ProjectDB project sources and base components. Provide the task and the project's own instructions, configuration and examples so Codex can work with the installed APIs and library versions.
 
-В клиентах Codex с поддержкой marketplace добавьте каталог:
+## Installation
+
+Choose one installation method for personal use or a shared workspace.
+
+### Personal use: plugin
+
+In a Codex client that supports plugin marketplaces, add this source:
 
 ```text
 codex plugin marketplace add pavel-elblaus/codex-projectdb-skill --ref main
 ```
 
-Затем установите **ProjectDB for Codex** из одноимённого источника в каталоге плагинов приложения. Если источник не появился, перезапустите приложение. Для обновления локального источника выполните:
+Open the application's plugin directory, select the **ProjectDB for Codex** source and install **ProjectDB for Codex**. Restart the application if the source does not appear.
+
+### Personal use: standalone skill
+
+To install the skill directly, ask Codex:
+
+> Use $skill-installer to install the skill from https://github.com/pavel-elblaus/codex-projectdb-skill/tree/main/plugins/projectdb/skills/projectdb-constructor.
+
+This installs a local copy of the skill. Choose either the plugin or the standalone skill to avoid two entries with the same skill name.
+
+### Teams: workspace plugin
+
+A workspace administrator can import the repository and make the plugin available to members. Import it separately into each workspace that needs access.
+
+1. Open [Admin Console](https://admin.openai.com), select the workspace and go to **Plugins → Add → Import marketplace**.
+2. Set **Source** to `https://github.com/pavel-elblaus/codex-projectdb-skill`.
+3. Leave **Path** empty.
+4. Set **Branch, tag, or commit** to **`main`** to receive future updates.
+5. Select **Import marketplace** and complete the GitHub sign-in if prompted.
+6. Find **ProjectDB for Codex** and configure its installation policy: **Available** for members to install, or **Installed** for eligible roles where supported.
+7. Confirm that automatic marketplace sync is enabled. Members install the plugin unless it has been assigned automatically.
+
+Availability depends on the workspace's settings and permissions. See the [official marketplace import and sync guide](https://help.openai.com/en/articles/20001504-importing-and-syncing-plugin-marketplaces-from-github).
+
+## Usage
+
+Select **ProjectDB for Codex** from the available plugins and describe the task. For example:
+
+> Use the projectdb-constructor skill. Read the project's AGENTS.md and update the ProjectDB module while preserving its input data and existing contracts.
+
+In local clients with skill selection, you can explicitly invoke `$projectdb-constructor`.
+
+## Updates
+
+For a personal plugin installation, refresh the marketplace source:
 
 ```text
 codex plugin marketplace upgrade pavel-projectdb-skills
 ```
 
-### Для личного использования: самостоятельный навык
+For a standalone installation, ask Codex to update the installed skill from the same GitHub source.
 
-Если нужен только навык, попросите Codex:
-
-> Используй $skill-installer и установи навык из https://github.com/pavel-elblaus/codex-projectdb-skill/tree/main/plugins/projectdb/skills/projectdb-constructor.
-
-Этот способ устанавливает локальную копию без плагина. Для дальнейшего обновления попросите Codex обновить установленный навык из того же источника. Если одновременно установить плагин и самостоятельный навык, могут появиться два варианта с одинаковым именем.
-
-### Для команды: плагин с автоматическими обновлениями
-
-Если вы используете управляемое рабочее пространство ChatGPT, администратор может один раз подключить репозиторий и настроить доступ участникам. При нескольких рабочих пространствах репозиторий импортируется в каждое отдельно.
-
-1. Откройте [Admin Console](https://admin.openai.com), выберите нужное рабочее пространство и перейдите в **Plugins → Add → Import marketplace**.
-2. В **Source** укажите `https://github.com/pavel-elblaus/codex-projectdb-skill`.
-3. Поле **Path** оставьте пустым: каталог `.agents/plugins/marketplace.json` находится в корне репозитория.
-4. В **Branch, tag, or commit** укажите **`main`**. Ветка получает новые коммиты; фиксированный commit или tag оставит прежнюю версию.
-5. Нажмите **Import marketplace** и выполните предлагаемый вход в GitHub.
-6. В результатах найдите **ProjectDB for Codex** и настройте установку: **Available** для самостоятельной установки пользователями или **Installed** для подходящих ролей, если эта настройка доступна.
-7. Проверьте, что автоматическая синхронизация каталога включена. Пользователь устанавливает плагин, если администратор не назначил автоматическую установку.
-
-Новые каталоги по умолчанию проверяют обновления ежедневно. Для обновления раньше откройте **Plugins → Marketplaces → ProjectDB for Codex → Sync now**. Доступность импорта и установки зависит от настроек рабочего пространства. Пакет содержит только навык; подключение к внешним сервисам ему не требуется.
-
-Опубликованные изменения из `main` получает рабочее пространство через синхронизацию каталога. Простая локальная установка папки или ZIP не настраивает этот канал обновлений. Изменения, сохранённые только на компьютере автора, сначала нужно отправить в GitHub.
-
-[Официальная инструкция импорта и синхронизации](https://help.openai.com/en/articles/20001504-importing-and-syncing-plugin-marketplaces-from-github).
-
-## Использование
-
-После установки выберите плагин **ProjectDB for Codex** в доступном списке плагинов. Пример задания:
-
-> Используй навык projectdb-constructor. Прочитай AGENTS.md проекта и доработай модуль ProjectDB с сохранением входящих данных и штатных контрактов.
-
-В локальных клиентах с выбором навыков можно явно вызвать `$projectdb-constructor`. Если у вас уже установлена самостоятельная копия этого навыка, выберите нужный источник; после проверки плагина отключите устаревшую копию, чтобы избежать двух вариантов с одинаковым именем.
-
-## Разработка и публикация обновлений
-
-Единственный источник навыка — `plugins/projectdb/skills/projectdb-constructor/` в этом репозитории. Для разработки подключите эту папку к локальному каталогу навыков через ссылку. Codex читает и исправляет те же файлы, которые хранятся в Git; отдельная копия для переноса не нужна.
-
-В Windows после клонирования репозитория выполните из его корня:
-
-```powershell
-.\scripts\setup-author.ps1
-```
-
-Скрипт подключает ветку `main`, проверяет пакет, сохраняет прежний установленный навык в резервную папку и создаёт junction на исходники из репозитория. Затем он включает режим автора только для этого локального репозитория: `git config --local projectdb.autoPublish true`. Для commit и push нужны настроенные Git-имя, email и доступ к своему репозиторию. При создании собственного форка сначала укажите его адрес в манифесте и origin.
-
-После завершённой доработки навыка Codex в режиме автора запускает:
-
-```text
-node scripts/publish.mjs --auto
-```
-
-Команда проверяет пакет, автоматически повышает patch-версию при изменении плагина, создаёт commit и отправляет его в `main`. Незавершённые правки после каждого сохранения не публикуются. При ошибке проверки, конфликте или проблеме доступа публикация останавливается, локальные изменения сохраняются. Предварительная проверка без commit и push: `node scripts/publish.mjs --check`.
-
-В исходный навык включайте только общие правила и подтверждённые контракты ProjectDB. Названия отдельных проектов, домены, локальные пути, контент, настройки и частные решения храните в `AGENTS.md` или документации соответствующего проекта. Перед записью нового знания уберите привязку к исходному случаю; неподтверждённое обобщение оставьте в проекте.
-
-Режим автора включается владельцем локально и не передаётся при установке плагина. Обычные пользователи получают опубликованные версии выбранным способом установки. Для отключения автоматической публикации: `git config --local projectdb.autoPublish false`.
-
-## Проверка пакета
-
-```text
-node scripts/validate.mjs
-```
-
-Проверяются каталог marketplace, основные поля манифеста, состав файлов навыка, frontmatter, локальные ссылки, формат JSON, синтаксис JavaScript, адреса сайтов и типичные следы персональных данных. GitHub Actions запускает эту проверку при push и pull request, а также проверяет процесс публикации на временном локальном Git-репозитории. Проверка не заменяет пробную установку в целевом рабочем пространстве и тестирование задач на реальном проекте ProjectDB.
-
-## Структура
-
-```text
-.agents/plugins/marketplace.json       Каталог для импорта из GitHub
-plugins/projectdb/plugin.json          Манифест и версия плагина
-plugins/projectdb/skills/
-  projectdb-constructor/
-    SKILL.md                          Основные инструкции
-    agents/openai.yaml                Отображение навыка
-    references/                       Правила и справочники
-    examples/                         Примеры контрактов
-scripts/                              Проверка, подключение и публикация
-```
-
-[Формат плагинов OpenAI](https://developers.openai.com/plugins/build/plugins).
+Workspace marketplaces check for updates daily by default. To request an earlier update, an administrator can open **Plugins → Marketplaces → ProjectDB for Codex → Sync now**. Keep the imported source on the `main` branch to receive new versions.
