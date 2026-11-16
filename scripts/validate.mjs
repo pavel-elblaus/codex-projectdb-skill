@@ -53,6 +53,9 @@ try {
 	assert.match(frontmatter[1], /^name: projectdb-constructor$/m);
 	assert.match(frontmatter[1], /^description: .{20,}$/m);
 	assert.match(await readFile(path.join(skill, 'agents/openai.yaml'), 'utf8'), /\$projectdb-constructor/);
+	for (const script of ['skill-package.mjs', 'publish.mjs', 'validate.mjs', 'test-publish.mjs']) {
+		execFileSync(process.execPath, ['--check', path.join(root, 'scripts', script)], { stdio: 'pipe' });
+	}
 	console.log(`Validated ProjectDB ${manifest.version}: marketplace, plugin manifest, ${files.length} skill files, ${links} local links and JavaScript syntax.`);
 } catch (error) {
 	console.error(`Validation failed: ${error.message}`);

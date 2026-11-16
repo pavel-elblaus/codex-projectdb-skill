@@ -17,3 +17,5 @@ jobs:
           persist-credentials: false
       - name: Validate the distributable plugin
         run: node scripts/validate.mjs
+      - name: Verify automatic publication against a local Git remote
+        run: node scripts/test-publish.mjs
