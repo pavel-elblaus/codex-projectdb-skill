@@ -42,7 +42,7 @@ A workspace administrator can import the repository and make the plugin availabl
 4. Set **Branch, tag, or commit** to **`main`** to receive future updates.
 5. Select **Import marketplace** and complete the GitHub sign-in if prompted.
 6. Find **ProjectDB for Codex** and configure its installation policy: **Available** for members to install, or **Installed** for eligible roles where supported.
-7. Confirm that automatic marketplace sync is enabled. Members install the plugin unless it has been assigned automatically.
+7. Members install the plugin unless it has been assigned automatically.
 
 Availability depends on the workspace's settings and permissions. See the [official marketplace import and sync guide](https://help.openai.com/en/articles/20001504-importing-and-syncing-plugin-marketplaces-from-github).
 
@@ -64,4 +64,4 @@ codex plugin marketplace upgrade pavel-projectdb-skills
 
 For a standalone installation, ask Codex to update the installed skill from the same GitHub source.
 
-Workspace marketplaces check for updates daily by default. To request an earlier update, an administrator can open **Plugins → Marketplaces → ProjectDB for Codex → Sync now**. Keep the imported source on the `main` branch to receive new versions.
+Daily update checks are enabled by default after import. To request an earlier update, an administrator can open **Plugins → Marketplaces → ProjectDB for Codex → Sync now**. Keep the imported source on the `main` branch to receive new versions.
