@@ -1,7 +1,7 @@
 {
 	"$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
 	"name": "projectdb",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"description": "Навык для разработки и проверки Twig, JSON, CSS, JavaScript и ручной сборки ProjectDB в Codex.",
 	"author": {
 		"name": "pavel-elblaus",
