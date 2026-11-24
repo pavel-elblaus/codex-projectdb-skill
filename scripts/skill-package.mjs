@@ -10,6 +10,7 @@ export const skillFiles = [
 	'references/base-components.md',
 	'references/javascript.md',
 	'references/projectdb-rules.md',
+	'references/seo.md',
 ];
 
 export async function listFiles(root, prefix = '') {

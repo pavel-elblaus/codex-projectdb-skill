@@ -2,7 +2,7 @@
 
 Описание и руководство также доступны [на русском языке](README.ru.md).
 
-**ProjectDB skill for Codex** helps you develop and review ProjectDB templates and modules while preserving the platform's existing contracts. It covers Twig templates, JSON configuration, CSS, modular JavaScript, resource inheritance and manual assembly with `project-map.json`.
+**ProjectDB skill for Codex** helps you develop and review ProjectDB templates and modules while preserving the platform's existing contracts. It covers Twig templates, JSON configuration, CSS, modular JavaScript, resource inheritance, manual assembly with `project-map.json`, and technical SEO checks for ProjectDB sites and migrations.
 
 The plugin includes the `projectdb-constructor` skill, reference material and small contract examples. The skill's instructions are written in Russian.
 
